@@ -1,0 +1,8 @@
+[
+  {"feature1": 1.0, "feature2": 2.0, "feature3": 3.0, "label": 0},
+  {"feature1": 2.0, "feature2": 3.0, "feature3": 4.0, "label": 1},
+  {"feature1": 3.0, "feature2": 4.0, "feature3": 5.0, "label": 0},
+  {"feature1": 4.0, "feature2": 5.0, "feature3": 6.0, "label": 1},
+  {"feature1": 5.0, "feature2": 6.0, "feature3": 7.0, "label": 0}
+]
+
