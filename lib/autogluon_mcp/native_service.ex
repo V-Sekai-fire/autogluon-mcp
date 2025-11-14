@@ -423,30 +423,24 @@ defmodule AutogluonMcp.NativeService do
 
   # Prompt handler
   defp build_operation_guidance(task_type, operation, data_path, label, model_path) do
-    guidance_map = %{
-      {"tabular", "fit"} => fn ->
+    case {task_type, operation} do
+      {"tabular", "fit"} ->
         "To fit a tabular predictor with data at #{data_path || "your data path"} for label #{label || "your label"}, use the autogluon_fit_tabular tool."
-      end,
-      {"tabular", "predict"} => fn ->
+
+      {"tabular", "predict"} ->
         "To predict with a tabular model at #{model_path || "your model path"} on test data at #{data_path || "your test data path"}, use the autogluon_predict_tabular tool."
-      end,
-      {"multimodal", "fit"} => fn ->
+
+      {"multimodal", "fit"} ->
         "To fit a multimodal predictor with data at #{data_path || "your data path"} for label #{label || "your label"}, use the autogluon_fit_multimodal tool."
-      end,
-      {"timeseries", "fit"} => fn ->
+
+      {"timeseries", "fit"} ->
         "To fit a time series predictor with data at #{data_path || "your data path"} for target #{label || "your target"}, use the autogluon_fit_timeseries tool."
-      end,
-      {_, "evaluate"} => fn ->
+
+      {_, "evaluate"} ->
         "To evaluate a #{task_type} model at #{model_path || "your model path"} on test data at #{data_path || "your test data path"}, use the autogluon_evaluate_model tool with model_type='#{task_type}'."
-      end
-    }
 
-    case Map.get(guidance_map, {task_type, operation}) do
-      nil ->
+      _ ->
         "Available operations for #{task_type}: fit, predict, evaluate. Use the appropriate AutoGluon tool for your task."
-
-      guidance_fn ->
-        guidance_fn.()
     end
   end
 end

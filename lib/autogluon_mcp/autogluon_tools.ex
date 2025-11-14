@@ -34,13 +34,9 @@ defmodule AutogluonMcp.AutogluonTools do
   @spec fit_tabular(String.t(), String.t(), integer() | nil) :: autogluon_result()
   def fit_tabular(train_data_path, label, time_limit \\ nil)
       when is_binary(train_data_path) and is_binary(label) do
-    case ensure_pythonx() do
-      :ok ->
-        do_fit_tabular(train_data_path, label, time_limit)
-
-      :mock ->
-        mock_fit_tabular(train_data_path, label, time_limit)
-    end
+    # ensure_pythonx will raise if AutoGluon is not available
+    ensure_pythonx()
+    do_fit_tabular(train_data_path, label, time_limit)
   end
 
   defp mock_fit_tabular(_train_data_path, label, _time_limit) do
@@ -53,39 +49,49 @@ defmodule AutogluonMcp.AutogluonTools do
   end
 
   defp ensure_pythonx do
+    # AutoGluonValidator ensures AutoGluon is available at startup
+    # If we reach here, it means the validator passed, so we can assume :ok
+    # But we still do a quick check to be safe
     case Application.ensure_all_started(:pythonx) do
       {:error, reason} ->
-        Logger.warning("Failed to start Pythonx application: #{inspect(reason)}")
-        :mock
+        raise "Pythonx application failed to start: #{inspect(reason)}. This should not happen if AutogluonValidator passed."
 
       {:ok, _} ->
-        check_pythonx_availability()
+        # Quick validation - if this fails, something went wrong after startup
+        case quick_python_check() do
+          :ok -> :ok
+          error -> raise "Python availability check failed: #{inspect(error)}"
+        end
     end
   rescue
     exception ->
-      Logger.error("Exception starting Pythonx: #{Exception.message(exception)}")
-      :mock
+      raise "Failed to ensure Pythonx: #{Exception.message(exception)}"
   end
 
-  defp check_pythonx_availability do
-    # Use /dev/null to suppress Python's output from corrupting stdio
-    null_device = if :os.type() == {:unix, _}, do: File.open!("/dev/null", [:write]), else: :stdio
+  defp quick_python_check do
+    null_device = get_null_device()
 
     case Pythonx.eval("1 + 1", %{}, stdout_device: null_device, stderr_device: null_device) do
       {result, _globals} ->
         case Pythonx.decode(result) do
           2 -> :ok
-          _ -> :mock
+          _ -> {:error, :python_eval_failed}
         end
 
       _ ->
-        :mock
+        {:error, :python_eval_failed}
+    end
+  end
+
+  defp get_null_device do
+    case :os.type() do
+      {:unix, _} -> File.open!("/dev/null", [:write])
+      {:win32, _} -> File.open!("NUL", [:write])
+      _ -> :stdio
     end
   end
 
   defp do_fit_tabular(train_data_path, label, time_limit) do
-    time_limit_param = if time_limit, do: "time_limit=#{time_limit}", else: ""
-
     code = """
     from autogluon.tabular import TabularPredictor
     import pandas as pd
@@ -154,13 +160,8 @@ defmodule AutogluonMcp.AutogluonTools do
   @spec predict_tabular(String.t(), String.t()) :: autogluon_result()
   def predict_tabular(model_path, test_data_path)
       when is_binary(model_path) and is_binary(test_data_path) do
-    case ensure_pythonx() do
-      :ok ->
-        do_predict_tabular(model_path, test_data_path)
-
-      :mock ->
-        mock_predict_tabular(model_path, test_data_path)
-    end
+    ensure_pythonx()
+    do_predict_tabular(model_path, test_data_path)
   end
 
   defp mock_predict_tabular(_model_path, _test_data_path) do
@@ -227,13 +228,8 @@ defmodule AutogluonMcp.AutogluonTools do
   @spec fit_multimodal(String.t(), String.t(), String.t()) :: autogluon_result()
   def fit_multimodal(train_data_path, label, problem_type \\ "classification")
       when is_binary(train_data_path) and is_binary(label) do
-    case ensure_pythonx() do
-      :ok ->
-        do_fit_multimodal(train_data_path, label, problem_type)
-
-      :mock ->
-        mock_fit_multimodal(train_data_path, label, problem_type)
-    end
+    ensure_pythonx()
+    do_fit_multimodal(train_data_path, label, problem_type)
   end
 
   defp mock_fit_multimodal(_train_data_path, label, problem_type) do
@@ -312,13 +308,8 @@ defmodule AutogluonMcp.AutogluonTools do
   @spec fit_timeseries(String.t(), String.t(), integer()) :: autogluon_result()
   def fit_timeseries(train_data_path, target, prediction_length)
       when is_binary(train_data_path) and is_binary(target) and is_integer(prediction_length) do
-    case ensure_pythonx() do
-      :ok ->
-        do_fit_timeseries(train_data_path, target, prediction_length)
-
-      :mock ->
-        mock_fit_timeseries(train_data_path, target, prediction_length)
-    end
+    ensure_pythonx()
+    do_fit_timeseries(train_data_path, target, prediction_length)
   end
 
   defp mock_fit_timeseries(_train_data_path, target, prediction_length) do
@@ -396,13 +387,8 @@ defmodule AutogluonMcp.AutogluonTools do
   @spec evaluate_model(String.t(), String.t(), String.t()) :: autogluon_result()
   def evaluate_model(model_path, test_data_path, model_type)
       when is_binary(model_path) and is_binary(test_data_path) and is_binary(model_type) do
-    case ensure_pythonx() do
-      :ok ->
-        do_evaluate_model(model_path, test_data_path, model_type)
-
-      :mock ->
-        mock_evaluate_model(model_path, test_data_path, model_type)
-    end
+    ensure_pythonx()
+    do_evaluate_model(model_path, test_data_path, model_type)
   end
 
   defp mock_evaluate_model(_model_path, _test_data_path, model_type) do
