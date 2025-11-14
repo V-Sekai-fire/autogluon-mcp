@@ -9,7 +9,7 @@ config :pythonx, :uv_init,
   [project]
   name = "mcp_aria_autogluon"
   version = "0.1.0"
-  requires-python = ">=3.8"
+  requires-python = ">=3.9,<3.13"
   dependencies = [
     "autogluon>=1.4.0",
     "pandas>=1.5.0",
