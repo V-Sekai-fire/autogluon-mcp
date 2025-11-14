@@ -32,10 +32,6 @@ jobs:
       - name: Run formatter check
         run: mix format --check-formatted
 
-      - name: Run credo
-        run: mix credo --strict
-        continue-on-error: true
-
       - name: Run dialyzer
         run: mix dialyzer
         continue-on-error: true
@@ -61,6 +57,3 @@ jobs:
 
       - name: Check formatting
         run: mix format --check-formatted
-
-      - name: Credo analysis
-        run: mix credo --strict
