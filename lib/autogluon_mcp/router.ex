@@ -23,8 +23,9 @@ defmodule AutogluonMcp.Router do
     init_opts: [
       handler: AutogluonMcp.NativeService,
       server_info: %{
-        name: "AutoGluon MCP Server",
-        version: "1.0.0-dev1"
+        name: "AutoGluon MCP Server (Development Release)",
+        version: "1.0.0-dev1",
+        description: "⚠️ DEVELOPMENT RELEASE - Not for production use"
       },
       # Always enable SSE (never disable), but HttpPlugWrapper will fallback to HTTP if no SSE connection
       # Set MCP_SSE_ENABLED=false to disable SSE entirely (not recommended)

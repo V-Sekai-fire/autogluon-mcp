@@ -8,6 +8,13 @@ defmodule AutogluonMcp.MixProject do
     [
       app: :autogluon_mcp,
       version: "1.0.0-dev1",
+      description: """
+      AutoGluon MCP Server - DEVELOPMENT RELEASE
+      
+      ⚠️ WARNING: This is a development release (dev release), NOT a beta, release candidate, or stable release.
+      This software is under active development and may contain bugs, incomplete features, and breaking changes.
+      Use at your own risk. Do not use in production environments.
+      """,
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       releases: releases(),

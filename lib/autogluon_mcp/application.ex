@@ -2,7 +2,11 @@
 # Copyright (c) 2025-present K. S. Ernest (iFire) Lee
 
 defmodule AutogluonMcp.Application do
-  @moduledoc false
+  @moduledoc """
+  Application module for AutoGluon MCP Server.
+  
+  ⚠️ **DEVELOPMENT RELEASE**: Not for production use.
+  """
 
   use Application
 

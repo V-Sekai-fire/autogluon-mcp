@@ -8,6 +8,8 @@ defmodule Mix.Tasks.Mcp.Server do
   This task starts the MCP server that provides machine learning
   capabilities via the Model Context Protocol.
 
+  ⚠️ **DEVELOPMENT RELEASE**: This is a development release. Not for production use.
+
   ## Usage
 
       mix mcp.server

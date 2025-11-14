@@ -5,13 +5,15 @@ defmodule AutogluonMcp.NativeService do
   @moduledoc """
   Native BEAM service for AutoGluon MCP using ex_mcp library.
   Provides machine learning tools via MCP protocol.
+  
+  ⚠️ **DEVELOPMENT RELEASE**: Not for production use.
   """
 
   # Suppress warnings from ex_mcp DSL generated code
   @compile {:no_warn_undefined, :no_warn_pattern}
 
   use ExMCP.Server,
-    name: "AutoGluon MCP Server",
+    name: "AutoGluon MCP Server (Development Release)",
     version: "1.0.0-dev1"
 
   # Define AutoGluon tools using ex_mcp DSL
@@ -240,8 +242,9 @@ defmodule AutogluonMcp.NativeService do
          %{
            protocolVersion: Map.get(params, "protocolVersion", "2025-06-18"),
            serverInfo: %{
-             name: "AutoGluon MCP Server",
-             version: "1.0.0-dev1"
+             name: "AutoGluon MCP Server (Development Release)",
+             version: "1.0.0-dev1",
+             description: "⚠️ DEVELOPMENT RELEASE - Not for production use"
            },
            capabilities: %{
              tools: %{},

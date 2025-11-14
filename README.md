@@ -2,6 +2,15 @@
 
 [![smithery badge](https://smithery.ai/badge/@V-Sekai-fire/autogluon-mcp)](https://smithery.ai/server/@V-Sekai-fire/autogluon-mcp)
 
+> **⚠️ DEVELOPMENT RELEASE NOTICE**
+> 
+> This is a **development release** (dev release). This software is:
+> - **NOT** a beta release
+> - **NOT** a release candidate
+> - **NOT** a stable release
+> 
+> This software is under active development and may contain bugs, incomplete features, and breaking changes. Use at your own risk. Do not use in production environments.
+
 An Elixir-based MCP (Model Context Protocol) server that provides machine learning capabilities using AutoGluon.
 
 ## Features
@@ -11,6 +20,10 @@ An Elixir-based MCP (Model Context Protocol) server that provides machine learni
 - **Time Series Forecasting**: Forecast future values in time series data
 - **Model Evaluation**: Evaluate trained models on test data
 - **Easy Integration**: Simple API for training, prediction, and evaluation
+
+## Development Release
+
+**⚠️ This is a development release (dev release), NOT a beta, release candidate, or stable release. Do not use in production.**
 
 ## Quick Start
 

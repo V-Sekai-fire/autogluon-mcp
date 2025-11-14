@@ -5,6 +5,8 @@ defmodule AutogluonMcp.AutogluonTools do
   @moduledoc """
   AutoGluon tools exposed via MCP using Pythonx for machine learning.
 
+  ⚠️ **DEVELOPMENT RELEASE**: This is a development release. Not for production use.
+
   This module provides MCP tools that wrap AutoGluon functionality for:
   - Tabular prediction
   - Multimodal prediction (text, image, text+image)
