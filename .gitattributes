@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025-present K. S. Ernest (iFire) Lee
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code files should always use LF
+*.ex text eol=lf
+*.exs text eol=lf
+
+# Configuration files
+*.exs text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Binary files
+*.pkl binary
+*.model binary
+*.ubj binary
+

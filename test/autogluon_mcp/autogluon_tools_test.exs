@@ -132,4 +132,3 @@ defmodule AutogluonMcp.AutogluonToolsTest do
     end
   end
 end
-
