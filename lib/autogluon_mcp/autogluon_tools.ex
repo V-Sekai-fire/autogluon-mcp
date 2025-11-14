@@ -66,7 +66,7 @@ defmodule AutogluonMcp.AutogluonTools do
     end
   rescue
     exception ->
-      raise "Failed to ensure Pythonx: #{Exception.message(exception)}"
+      reraise "Failed to ensure Pythonx: #{Exception.message(exception)}", __STACKTRACE__
   end
 
   defp quick_python_check do
