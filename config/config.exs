@@ -16,4 +16,3 @@ config :pythonx, :uv_init,
     "numpy>=1.21.0"
   ]
   """
-

@@ -40,12 +40,13 @@ defmodule AutogluonMcp.AutogluonTools do
   end
 
   defp mock_fit_tabular(_train_data_path, label, _time_limit) do
-    {:ok, %{
-      "label" => label,
-      "status" => "completed",
-      "best_model" => "WeightedEnsemble_L3",
-      "fit_summary" => "Mock training completed successfully"
-    }}
+    {:ok,
+     %{
+       "label" => label,
+       "status" => "completed",
+       "best_model" => "WeightedEnsemble_L3",
+       "fit_summary" => "Mock training completed successfully"
+     }}
   end
 
   defp ensure_pythonx do
@@ -107,14 +108,14 @@ defmodule AutogluonMcp.AutogluonTools do
 
     # Train predictor
     predictor = TabularPredictor(label='#{String.replace(label, "'", "\\'")}').fit(train_data#{if time_limit, do: ", time_limit=#{time_limit}", else: ""})
-    
+
     # Get fit summary
     fit_summary = predictor.fit_summary()
-    
+
     # Get leaderboard
     leaderboard = predictor.leaderboard(silent=True)
     best_model = leaderboard.iloc[0]['model'] if len(leaderboard) > 0 else None
-    
+
     result = {
         'label': '#{String.replace(label, "'", "\\'")}',
         'status': 'completed',
@@ -177,7 +178,7 @@ defmodule AutogluonMcp.AutogluonTools do
     # Load model
     model_path = '#{String.replace(model_path, "'", "\\'")}'
     predictor = TabularPredictor.load(model_path)
-    
+
     # Load test data
     test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
     if test_data_path.endswith('.csv'):
@@ -185,7 +186,7 @@ defmodule AutogluonMcp.AutogluonTools do
     else:
         # Assume JSON string
         test_data = pd.read_json(test_data_path)
-    
+
     # Make predictions
     predictions = predictor.predict(test_data)
     predictions_list = predictions.tolist()
@@ -233,12 +234,13 @@ defmodule AutogluonMcp.AutogluonTools do
   end
 
   defp mock_fit_multimodal(_train_data_path, label, problem_type) do
-    {:ok, %{
-      "label" => label,
-      "problem_type" => problem_type,
-      "status" => "completed",
-      "fit_summary" => "Mock multimodal training completed"
-    }}
+    {:ok,
+     %{
+       "label" => label,
+       "problem_type" => problem_type,
+       "status" => "completed",
+       "fit_summary" => "Mock multimodal training completed"
+     }}
   end
 
   defp do_fit_multimodal(train_data_path, label, problem_type) do
@@ -260,9 +262,9 @@ defmodule AutogluonMcp.AutogluonTools do
     # Train predictor
     predictor = MultiModalPredictor(label='#{String.replace(label, "'", "\\'")}', problem_type='#{String.replace(problem_type, "'", "\\'")}')
     predictor.fit(train_data)
-    
+
     fit_summary = predictor.fit_summary()
-    
+
     result = {
         'label': '#{String.replace(label, "'", "\\'")}',
         'problem_type': '#{String.replace(problem_type, "'", "\\'")}',
@@ -313,12 +315,13 @@ defmodule AutogluonMcp.AutogluonTools do
   end
 
   defp mock_fit_timeseries(_train_data_path, target, prediction_length) do
-    {:ok, %{
-      "target" => target,
-      "prediction_length" => prediction_length,
-      "status" => "completed",
-      "fit_summary" => "Mock time series training completed"
-    }}
+    {:ok,
+     %{
+       "target" => target,
+       "prediction_length" => prediction_length,
+       "status" => "completed",
+       "fit_summary" => "Mock time series training completed"
+     }}
   end
 
   defp do_fit_timeseries(train_data_path, target, prediction_length) do
@@ -339,9 +342,9 @@ defmodule AutogluonMcp.AutogluonTools do
     # Train predictor
     predictor = TimeSeriesPredictor(target='#{String.replace(target, "'", "\\'")}', prediction_length=#{prediction_length})
     predictor.fit(data)
-    
+
     fit_summary = predictor.fit_summary()
-    
+
     result = {
         'target': '#{String.replace(target, "'", "\\'")}',
         'prediction_length': #{prediction_length},
@@ -407,67 +410,68 @@ defmodule AutogluonMcp.AutogluonTools do
   end
 
   defp do_evaluate_model(model_path, test_data_path, model_type) do
-    code = case model_type do
-      "tabular" ->
-        """
-        from autogluon.tabular import TabularPredictor
-        import pandas as pd
-        import json
+    code =
+      case model_type do
+        "tabular" ->
+          """
+          from autogluon.tabular import TabularPredictor
+          import pandas as pd
+          import json
 
-        model_path = '#{String.replace(model_path, "'", "\\'")}'
-        predictor = TabularPredictor.load(model_path)
-        test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
-        if test_data_path.endswith('.csv'):
-            test_data = pd.read_csv(test_data_path)
-        else:
-            test_data = pd.read_json(test_data_path)
-        
-        metrics = predictor.evaluate(test_data)
-        json.dumps(metrics)
-        """
+          model_path = '#{String.replace(model_path, "'", "\\'")}'
+          predictor = TabularPredictor.load(model_path)
+          test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
+          if test_data_path.endswith('.csv'):
+              test_data = pd.read_csv(test_data_path)
+          else:
+              test_data = pd.read_json(test_data_path)
 
-      "multimodal" ->
-        """
-        from autogluon.multimodal import MultiModalPredictor
-        import pandas as pd
-        import json
+          metrics = predictor.evaluate(test_data)
+          json.dumps(metrics)
+          """
 
-        model_path = '#{String.replace(model_path, "'", "\\'")}'
-        predictor = MultiModalPredictor.load(model_path)
-        test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
-        if test_data_path.endswith('.csv'):
-            test_data = pd.read_csv(test_data_path)
-        elif test_data_path.endswith('.parquet'):
-            test_data = pd.read_parquet(test_data_path)
-        else:
-            test_data = pd.read_json(test_data_path)
-        
-        metrics = predictor.evaluate(test_data)
-        json.dumps(metrics)
-        """
+        "multimodal" ->
+          """
+          from autogluon.multimodal import MultiModalPredictor
+          import pandas as pd
+          import json
 
-      "timeseries" ->
-        """
-        from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor
-        import json
+          model_path = '#{String.replace(model_path, "'", "\\'")}'
+          predictor = MultiModalPredictor.load(model_path)
+          test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
+          if test_data_path.endswith('.csv'):
+              test_data = pd.read_csv(test_data_path)
+          elif test_data_path.endswith('.parquet'):
+              test_data = pd.read_parquet(test_data_path)
+          else:
+              test_data = pd.read_json(test_data_path)
 
-        model_path = '#{String.replace(model_path, "'", "\\'")}'
-        predictor = TimeSeriesPredictor.load(model_path)
-        test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
-        if test_data_path.endswith('.csv'):
-            test_data = TimeSeriesDataFrame.from_path(test_data_path)
-        else:
-            import pandas as pd
-            df = pd.read_json(test_data_path)
-            test_data = TimeSeriesDataFrame.from_data_frame(df)
-        
-        metrics = predictor.evaluate(test_data)
-        json.dumps(metrics)
-        """
+          metrics = predictor.evaluate(test_data)
+          json.dumps(metrics)
+          """
 
-      _ ->
-        raise ArgumentError, "Unknown model_type: #{model_type}"
-    end
+        "timeseries" ->
+          """
+          from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor
+          import json
+
+          model_path = '#{String.replace(model_path, "'", "\\'")}'
+          predictor = TimeSeriesPredictor.load(model_path)
+          test_data_path = '#{String.replace(test_data_path, "'", "\\'")}'
+          if test_data_path.endswith('.csv'):
+              test_data = TimeSeriesDataFrame.from_path(test_data_path)
+          else:
+              import pandas as pd
+              df = pd.read_json(test_data_path)
+              test_data = TimeSeriesDataFrame.from_data_frame(df)
+
+          metrics = predictor.evaluate(test_data)
+          json.dumps(metrics)
+          """
+
+        _ ->
+          raise ArgumentError, "Unknown model_type: #{model_type}"
+      end
 
     case Pythonx.eval(code, %{}) do
       {result, _globals} ->
@@ -511,4 +515,3 @@ defmodule AutogluonMcp.AutogluonTools do
   def test_mock_evaluate_model(model_path, test_data_path, model_type),
     do: mock_evaluate_model(model_path, test_data_path, model_type)
 end
-

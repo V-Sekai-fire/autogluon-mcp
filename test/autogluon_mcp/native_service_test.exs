@@ -13,6 +13,7 @@ defmodule AutogluonMcp.NativeServiceTest do
       params = %{
         "protocolVersion" => "2025-06-18"
       }
+
       state = %{}
 
       {:ok, result, new_state} = NativeService.handle_initialize(params, state)
@@ -29,6 +30,7 @@ defmodule AutogluonMcp.NativeServiceTest do
         "protocolVersion" => "2025-06-18",
         "config" => %{"timeout_ms" => 5000}
       }
+
       state = %{}
 
       {:ok, result, new_state} = NativeService.handle_initialize(params, state)
@@ -42,6 +44,7 @@ defmodule AutogluonMcp.NativeServiceTest do
         "protocolVersion" => "2025-06-18",
         "config" => %{"timeout_ms" => 50}
       }
+
       state = %{}
 
       {:error, reason, new_state} = NativeService.handle_initialize(params, state)
@@ -54,11 +57,13 @@ defmodule AutogluonMcp.NativeServiceTest do
   describe "handle_tool_call/3" do
     test "handles autogluon_fit_tabular tool call" do
       train_path = Path.join(@fixtures_dir, "tabular_train.csv")
+
       args = %{
         "train_data_path" => train_path,
         "label" => "label",
         "time_limit" => 10
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_fit_tabular", args, state) do
@@ -77,10 +82,12 @@ defmodule AutogluonMcp.NativeServiceTest do
 
     test "handles autogluon_fit_tabular with JSON data" do
       train_path = Path.join(@fixtures_dir, "tabular_train.json")
+
       args = %{
         "train_data_path" => train_path,
         "label" => "label"
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_fit_tabular", args, state) do
@@ -100,10 +107,12 @@ defmodule AutogluonMcp.NativeServiceTest do
       # Note: This would require a trained model, so we test the structure
       model_path = "/tmp/test_model"
       test_path = Path.join(@fixtures_dir, "tabular_test.csv")
+
       args = %{
         "model_path" => model_path,
         "test_data_path" => test_path
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_predict_tabular", args, state) do
@@ -121,11 +130,13 @@ defmodule AutogluonMcp.NativeServiceTest do
 
     test "handles autogluon_fit_multimodal tool call" do
       train_path = Path.join(@fixtures_dir, "multimodal_train.csv")
+
       args = %{
         "train_data_path" => train_path,
         "label" => "label",
         "problem_type" => "classification"
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_fit_multimodal", args, state) do
@@ -143,11 +154,13 @@ defmodule AutogluonMcp.NativeServiceTest do
 
     test "handles autogluon_fit_timeseries tool call" do
       train_path = Path.join(@fixtures_dir, "timeseries_train.csv")
+
       args = %{
         "train_data_path" => train_path,
         "target" => "target",
         "prediction_length" => 12
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_fit_timeseries", args, state) do
@@ -166,11 +179,13 @@ defmodule AutogluonMcp.NativeServiceTest do
     test "handles autogluon_evaluate_model tool call" do
       model_path = "/tmp/test_model"
       test_path = Path.join(@fixtures_dir, "tabular_test.csv")
+
       args = %{
         "model_path" => model_path,
         "test_data_path" => test_path,
         "model_type" => "tabular"
       }
+
       state = %{}
 
       case NativeService.handle_tool_call("autogluon_evaluate_model", args, state) do
@@ -218,6 +233,7 @@ defmodule AutogluonMcp.NativeServiceTest do
         "data_path" => "/path/to/data.csv",
         "label" => "label"
       }
+
       state = %{}
 
       {:ok, result, new_state} = NativeService.handle_prompt_get("autogluon_helper", args, state)
@@ -234,6 +250,7 @@ defmodule AutogluonMcp.NativeServiceTest do
         "task_type" => "tabular",
         "operation" => "fit"
       }
+
       state = %{}
 
       {:ok, result, new_state} = NativeService.handle_prompt_get("autogluon_helper", args, state)
@@ -257,4 +274,3 @@ defmodule AutogluonMcp.NativeServiceTest do
     end
   end
 end
-

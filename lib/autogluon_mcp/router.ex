@@ -33,4 +33,3 @@ defmodule AutogluonMcp.Router do
       cors_enabled: true
     ]
 end
-

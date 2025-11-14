@@ -4,7 +4,7 @@
 defmodule AutogluonMcp.Application do
   @moduledoc """
   Application module for AutoGluon MCP Server.
-  
+
   ⚠️ **DEVELOPMENT RELEASE**: Not for production use.
   """
 
@@ -89,4 +89,3 @@ defmodule AutogluonMcp.Application do
     end
   end
 end
-

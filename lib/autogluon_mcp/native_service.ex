@@ -5,7 +5,7 @@ defmodule AutogluonMcp.NativeService do
   @moduledoc """
   Native BEAM service for AutoGluon MCP using ex_mcp library.
   Provides machine learning tools via MCP protocol.
-  
+
   ⚠️ **DEVELOPMENT RELEASE**: Not for production use.
   """
 
@@ -444,4 +444,3 @@ defmodule AutogluonMcp.NativeService do
     end
   end
 end
-
