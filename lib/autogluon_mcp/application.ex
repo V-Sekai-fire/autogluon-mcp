@@ -20,33 +20,38 @@ defmodule AutogluonMcp.Application do
     transport = get_transport()
 
     children =
-      case transport do
-        :http ->
-          port = get_port()
-          host = get_host()
+      [
+        # Validator must start first and crash if AutoGluon is not available
+        {AutogluonMcp.AutogluonValidator, []}
+      ] ++
+        case transport do
+          :http ->
+            port = get_port()
+            host = get_host()
 
-          # Start NativeService directly with HTTP transport and SSE enabled
-          [
-            {
-              AutogluonMcp.NativeService,
-              [
-                transport: :http,
-                port: port,
-                host: host,
-                use_sse: true,
-                name: AutogluonMcp.NativeService
-              ]
-            }
-          ]
+            # Start NativeService directly with HTTP transport and SSE enabled
+            [
+              {
+                AutogluonMcp.NativeService,
+                [
+                  transport: :http,
+                  port: port,
+                  host: host,
+                  use_sse: true,
+                  name: AutogluonMcp.NativeService
+                ]
+              }
+            ]
 
-        :stdio ->
-          [
-            {AutogluonMcp.NativeService, [name: AutogluonMcp.NativeService]},
-            {AutogluonMcp.StdioServer, []}
-          ]
-      end
+          :stdio ->
+            [
+              {AutogluonMcp.NativeService, [name: AutogluonMcp.NativeService]},
+              {AutogluonMcp.StdioServer, []}
+            ]
+        end
 
-    opts = [strategy: :one_for_one, name: AutogluonMcp.Supervisor]
+    # Use one_for_all strategy so if validator crashes, everything stops
+    opts = [strategy: :one_for_all, name: AutogluonMcp.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
