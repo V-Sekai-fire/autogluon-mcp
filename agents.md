@@ -421,4 +421,3 @@ Common error scenarios:
 ## License
 
 MIT License - see LICENSE.md for details.
-

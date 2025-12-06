@@ -446,7 +446,7 @@ defmodule AutogluonMcp.NativeService do
     case {task_type, operation} do
       {_, "evaluate"} ->
         evaluate_guidance.()
-      
+
       _ ->
         case Map.get(guidance_map, {task_type, operation}) do
           nil ->
