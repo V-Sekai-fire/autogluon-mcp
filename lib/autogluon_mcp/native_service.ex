@@ -281,51 +281,95 @@ defmodule AutogluonMcp.NativeService do
   def handle_tool_call(tool_name, args, state) do
     case tool_name do
       "autogluon_fit_tabular" ->
-        time_limit = Map.get(args, "time_limit")
+        case validate_required_args(args, ["train_data_path", "label"]) do
+          :ok ->
+            time_limit = Map.get(args, "time_limit")
 
-        handle_autogluon_operation(
-          &AutogluonMcp.AutogluonTools.fit_tabular/3,
-          [args["train_data_path"], args["label"], time_limit],
-          "fit tabular predictor",
-          state
-        )
+            handle_autogluon_operation(
+              &AutogluonMcp.AutogluonTools.fit_tabular/3,
+              [args["train_data_path"], args["label"], time_limit],
+              "fit tabular predictor",
+              state
+            )
+
+          {:error, reason} ->
+            {:error, reason, state}
+        end
 
       "autogluon_predict_tabular" ->
-        handle_autogluon_operation(
-          &AutogluonMcp.AutogluonTools.predict_tabular/2,
-          [args["model_path"], args["test_data_path"]],
-          "predict with tabular model",
-          state
-        )
+        case validate_required_args(args, ["model_path", "test_data_path"]) do
+          :ok ->
+            handle_autogluon_operation(
+              &AutogluonMcp.AutogluonTools.predict_tabular/2,
+              [args["model_path"], args["test_data_path"]],
+              "predict with tabular model",
+              state
+            )
+
+          {:error, reason} ->
+            {:error, reason, state}
+        end
 
       "autogluon_fit_multimodal" ->
-        problem_type = Map.get(args, "problem_type", "classification")
+        case validate_required_args(args, ["train_data_path", "label"]) do
+          :ok ->
+            problem_type = Map.get(args, "problem_type", "classification")
 
-        handle_autogluon_operation(
-          &AutogluonMcp.AutogluonTools.fit_multimodal/3,
-          [args["train_data_path"], args["label"], problem_type],
-          "fit multimodal predictor",
-          state
-        )
+            handle_autogluon_operation(
+              &AutogluonMcp.AutogluonTools.fit_multimodal/3,
+              [args["train_data_path"], args["label"], problem_type],
+              "fit multimodal predictor",
+              state
+            )
+
+          {:error, reason} ->
+            {:error, reason, state}
+        end
 
       "autogluon_fit_timeseries" ->
-        handle_autogluon_operation(
-          &AutogluonMcp.AutogluonTools.fit_timeseries/3,
-          [args["train_data_path"], args["target"], args["prediction_length"]],
-          "fit time series predictor",
-          state
-        )
+        case validate_required_args(args, ["train_data_path", "target", "prediction_length"]) do
+          :ok ->
+            handle_autogluon_operation(
+              &AutogluonMcp.AutogluonTools.fit_timeseries/3,
+              [args["train_data_path"], args["target"], args["prediction_length"]],
+              "fit time series predictor",
+              state
+            )
+
+          {:error, reason} ->
+            {:error, reason, state}
+        end
 
       "autogluon_evaluate_model" ->
-        handle_autogluon_operation(
-          &AutogluonMcp.AutogluonTools.evaluate_model/3,
-          [args["model_path"], args["test_data_path"], args["model_type"]],
-          "evaluate model",
-          state
-        )
+        case validate_required_args(args, ["model_path", "test_data_path", "model_type"]) do
+          :ok ->
+            handle_autogluon_operation(
+              &AutogluonMcp.AutogluonTools.evaluate_model/3,
+              [args["model_path"], args["test_data_path"], args["model_type"]],
+              "evaluate model",
+              state
+            )
+
+          {:error, reason} ->
+            {:error, reason, state}
+        end
 
       _ ->
         {:error, "Tool not found: #{tool_name}", state}
+    end
+  end
+
+  # Validate required arguments before calling tool functions
+  defp validate_required_args(args, required_keys) do
+    missing_keys =
+      required_keys
+      |> Enum.filter(fn key -> is_nil(args[key]) or args[key] == "" end)
+
+    if Enum.empty?(missing_keys) do
+      :ok
+    else
+      missing_str = Enum.join(missing_keys, ", ")
+      {:error, "Missing required arguments: #{missing_str}"}
     end
   end
 
