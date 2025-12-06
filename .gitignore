@@ -72,3 +72,7 @@ logs/
 .env
 .env.local
 .env.*.local
+
+# Pythonx/uv project files
+.venv/
+uv.lock
