@@ -13,6 +13,7 @@ config :pythonx, :uv_init,
   dependencies = [
     "autogluon>=1.4.0",
     "pandas>=1.5.0",
-    "numpy>=1.21.0"
+    "numpy>=1.21.0",
+    "bokeh==2.0.1"
   ]
   """

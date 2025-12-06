@@ -73,13 +73,6 @@ PORT=8081 MIX_ENV=prod ./_build/prod/rel/autogluon_mcp/bin/autogluon_mcp start
 - `GET /sse` - Server-Sent Events for streaming
 - `GET /health` - Health check
 
-### Docker
-
-```bash
-docker build -t autogluon-mcp .
-docker run -d -p 8081:8081 --name autogluon-mcp autogluon-mcp
-```
-
 ### Available Tools
 
 - `autogluon_fit_tabular` - Train a tabular predictor on training data
