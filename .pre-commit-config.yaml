@@ -1,0 +1,43 @@
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-case-conflict
+
+  # Elixir formatting and linting (local hooks)
+  - repo: local
+    hooks:
+      - id: mix-format
+        name: mix format --check-formatted
+        entry: bash -c 'mix format --check-formatted'
+        language: system
+        types: [file]
+        files: \.exs?$
+        pass_filenames: false
+        always_run: true
+
+      - id: mix-credo
+        name: mix credo --strict
+        entry: bash -c 'mix credo --strict || true'
+        language: system
+        types: [file]
+        files: \.exs?$
+        pass_filenames: false
+        always_run: true
+
+      - id: mix-compile
+        name: mix compile
+        entry: bash -c 'mix compile'
+        language: system
+        types: [file]
+        files: \.exs?$
+        pass_filenames: false
+        always_run: true

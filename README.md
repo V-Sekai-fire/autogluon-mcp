@@ -1,12 +1,12 @@
 # AutoGluon MCP
 
 > **⚠️ DEVELOPMENT RELEASE NOTICE**
-> 
+>
 > This is a **development release** (dev release). This software is:
 > - **NOT** a beta release
 > - **NOT** a release candidate
 > - **NOT** a stable release
-> 
+>
 > This software is under active development and may contain bugs, incomplete features, and breaking changes. Use at your own risk. Do not use in production environments.
 
 An Elixir-based MCP (Model Context Protocol) server that provides machine learning capabilities using AutoGluon.
@@ -192,4 +192,3 @@ See [DEVELOPING.md](DEVELOPING.md) for development setup and contribution guidel
 - [AutoGluon Documentation](https://auto.gluon.ai/stable/index.html)
 - [PythonX Documentation](https://hex.pm/packages/pythonx)
 - [MCP Protocol](https://modelcontextprotocol.io/)
-
