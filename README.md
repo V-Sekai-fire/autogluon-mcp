@@ -1,7 +1,5 @@
 # AutoGluon MCP
 
-[![smithery badge](https://smithery.ai/badge/@V-Sekai-fire/autogluon-mcp)](https://smithery.ai/server/@V-Sekai-fire/autogluon-mcp)
-
 > **⚠️ DEVELOPMENT RELEASE NOTICE**
 > 
 > This is a **development release** (dev release). This software is:
@@ -61,7 +59,7 @@ Or using release:
 
 ### HTTP Transport
 
-For web deployments (e.g., Smithery):
+For web deployments:
 
 ```bash
 PORT=8081 MIX_ENV=prod ./_build/prod/rel/autogluon_mcp/bin/autogluon_mcp start

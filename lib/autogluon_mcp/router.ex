@@ -12,7 +12,7 @@ defmodule AutogluonMcp.Router do
   plug :match
   plug :dispatch
 
-  # Health check endpoint for Docker/Smithery
+  # Health check endpoint for Docker/container deployments
   get "/health" do
     send_resp(conn, 200, Jason.encode!(%{status: "ok"}))
   end

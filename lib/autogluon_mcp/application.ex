@@ -84,7 +84,7 @@ defmodule AutogluonMcp.Application do
         :stdio
 
       _ ->
-        # Default to http if PORT is set (Smithery deployment), otherwise stdio
+        # Default to http if PORT is set (container deployment), otherwise stdio
         if System.get_env("PORT"), do: :http, else: :stdio
     end
   end
