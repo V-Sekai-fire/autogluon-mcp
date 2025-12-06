@@ -423,24 +423,38 @@ defmodule AutogluonMcp.NativeService do
 
   # Prompt handler
   defp build_operation_guidance(task_type, operation, data_path, label, model_path) do
-    case {task_type, operation} do
-      {"tabular", "fit"} ->
+    guidance_map = %{
+      {"tabular", "fit"} => fn ->
         "To fit a tabular predictor with data at #{data_path || "your data path"} for label #{label || "your label"}, use the autogluon_fit_tabular tool."
-
-      {"tabular", "predict"} ->
+      end,
+      {"tabular", "predict"} => fn ->
         "To predict with a tabular model at #{model_path || "your model path"} on test data at #{data_path || "your test data path"}, use the autogluon_predict_tabular tool."
-
-      {"multimodal", "fit"} ->
+      end,
+      {"multimodal", "fit"} => fn ->
         "To fit a multimodal predictor with data at #{data_path || "your data path"} for label #{label || "your label"}, use the autogluon_fit_multimodal tool."
-
-      {"timeseries", "fit"} ->
+      end,
+      {"timeseries", "fit"} => fn ->
         "To fit a time series predictor with data at #{data_path || "your data path"} for target #{label || "your target"}, use the autogluon_fit_timeseries tool."
+      end
+    }
 
+    # Handle evaluate operation separately (can't use _ in map key pattern)
+    evaluate_guidance = fn ->
+      "To evaluate a #{task_type} model at #{model_path || "your model path"} on test data at #{data_path || "your test data path"}, use the autogluon_evaluate_model tool with model_type='#{task_type}'."
+    end
+
+    case {task_type, operation} do
       {_, "evaluate"} ->
-        "To evaluate a #{task_type} model at #{model_path || "your model path"} on test data at #{data_path || "your test data path"}, use the autogluon_evaluate_model tool with model_type='#{task_type}'."
-
+        evaluate_guidance.()
+      
       _ ->
-        "Available operations for #{task_type}: fit, predict, evaluate. Use the appropriate AutoGluon tool for your task."
+        case Map.get(guidance_map, {task_type, operation}) do
+          nil ->
+            "Available operations for #{task_type}: fit, predict, evaluate. Use the appropriate AutoGluon tool for your task."
+
+          guidance_fn ->
+            guidance_fn.()
+        end
     end
   end
 end
