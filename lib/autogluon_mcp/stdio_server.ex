@@ -25,4 +25,3 @@ defmodule AutogluonMcp.StdioServer do
     AutogluonMcp.NativeService.start_link(opts ++ [transport: :stdio])
   end
 end
-

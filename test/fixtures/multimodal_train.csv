@@ -1,0 +1,12 @@
+text_snippet,label
+"This is a positive review",positive
+"This is a negative review",negative
+"Great product!",positive
+"Terrible experience",negative
+"Highly recommend",positive
+"Would not buy again",negative
+"Excellent quality",positive
+"Poor service",negative
+"Love it!",positive
+"Disappointed",negative
+

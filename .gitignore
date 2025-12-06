@@ -39,9 +39,36 @@ Thumbs.db
 *.swo
 *~
 
-# Python virtual environments (if any)
+# Python virtual environments and cache
 venv/
 env/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.python-version
 
+# Test model outputs
+/tmp/test_model*
+*.pkl
+*.model
+
+# AutoGluon trained models directory
+/AutogluonModels/
+
+# Temporary test scripts
+test_*.exs
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local

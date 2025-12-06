@@ -10,7 +10,7 @@ defmodule AutogluonMcp.MixProject do
       version: "1.0.0-dev1",
       description: """
       AutoGluon MCP Server - DEVELOPMENT RELEASE
-      
+
       ⚠️ WARNING: This is a development release (dev release), NOT a beta, release candidate, or stable release.
       This software is under active development and may contain bugs, incomplete features, and breaking changes.
       Use at your own risk. Do not use in production environments.
@@ -65,4 +65,3 @@ defmodule AutogluonMcp.MixProject do
     ]
   end
 end
-

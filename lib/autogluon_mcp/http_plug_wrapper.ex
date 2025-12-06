@@ -98,4 +98,3 @@ defmodule AutogluonMcp.HttpPlugWrapper do
     end
   end
 end
-
